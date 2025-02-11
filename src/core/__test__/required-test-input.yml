@@ -1,0 +1,96 @@
+openapi: 3.0.0
+info:
+  title: Sample API
+  description: An example API with a complex response schema where all fields are required
+  version: 1.0.0
+paths:
+  /examples:
+    get:
+      summary: Summary of the endpoint
+      responses:
+        "200":
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExampleResponse"
+  /examples/{id}:
+    get:
+      summary: Summary of the endpoint
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  a:
+                    type: string
+                  b:
+                    type: object
+                    properties:
+                      c:
+                        type: string
+                  d:
+                    type: array
+                    items:
+                      type: string
+                  e:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        f:
+                          type: string
+                  g:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/h"
+components:
+  schemas:
+    ExampleResponse:
+      type: object
+      description: Example response schema
+      properties:
+        a:
+          type: string
+          description: A string field
+        b:
+          type: object
+          description: B object field
+          properties:
+            c:
+              type: string
+              description: C string field
+        d:
+          type: array
+          description: D array field
+          items:
+            type: string
+        e:
+          type: array
+          description: E array field
+          items:
+            type: object
+            properties:
+              f:
+                type: string
+                description: F string field
+        g:
+          type: array
+          description: G array field
+          items:
+            $ref: "#/components/schemas/h"
+    h:
+      type: object
+      description: H object field
+      properties:
+        i:
+          description: I string field
+          type: string
