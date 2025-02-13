@@ -17,7 +17,7 @@ export const createConvertCommand = (context: Context) => {
     .option(
       "-r, --required",
       "Forcing component schemas and responses to be marked as required",
-      false
+      false,
     )
     .option("-f, --format <format>", "Output format (yaml or json)")
     .requiredOption("-o, --output <output>", "Output file path")
