@@ -6,7 +6,6 @@ import { parseOpenApiFile } from "../utils/file";
 
 type Options = {
   required: boolean;
-  format?: "yaml" | "json";
   output: string;
 };
 
@@ -18,38 +17,38 @@ export const createConvertCommand = (context: Context) => {
     .option(
       "-r, --required",
       "Forcing component schemas and responses to be marked as required",
-      false,
+      false
     )
     .option("-f, --format <format>", "Output format (yaml or json)")
     .requiredOption("-o, --output <output>", "Output file path")
     .description("Convert your OpenAPI file")
-    .action(
-      (target: string, { output, format: formatProp, required }: Options) => {
-        const base = parseOpenApiFile(target);
-        let res = base;
+    .action((target: string, { output, required }: Options) => {
+      const base = parseOpenApiFile(target);
+      let res = base;
 
-        if (required) {
-          res = usecases.addRequired(base);
-        }
+      if (required) {
+        res = usecases.addRequired(base);
+      }
 
-        const format =
-          formatProp != null ? formatProp : path.extname(output).slice(1);
+      const format = path.extname(output).slice(1);
 
-        if (format === "json") {
-          const file = path.format({
-            ...path.parse(output),
-            base: undefined,
-            ext: ".json",
-          });
-          fs.writeFileSync(file, res, "utf8");
-        } else {
-          const file = path.format({
-            ...path.parse(output),
-            base: undefined,
-            ext: ".yaml",
-          });
-          fs.writeFileSync(file, yaml.dump(res), "utf8");
-        }
-      },
-    );
+      if (format === "json") {
+        const file = path.format({
+          ...path.parse(output),
+          base: undefined,
+          ext: ".json",
+        });
+        fs.mkdirSync(path.dirname(file), { recursive: true });
+        fs.writeFileSync(file, JSON.stringify(res, null, 2), "utf8");
+      } else {
+        path.parse(output);
+        const file = path.format({
+          ...path.parse(output),
+          base: undefined,
+          ext: ".yaml",
+        });
+        fs.mkdirSync(path.dirname(file), { recursive: true });
+        fs.writeFileSync(file, yaml.dump(res), "utf8");
+      }
+    });
 };
